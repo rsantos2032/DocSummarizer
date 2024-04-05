@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api:/app
+    environment:
+      FLASK_ENV: development
+    image: docsummarizer-api
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/user/src/app
+    depends_on:
+      - api
+    environment:
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    image: docsummarizer-client
