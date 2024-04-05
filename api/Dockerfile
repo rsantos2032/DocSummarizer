@@ -3,7 +3,7 @@ WORKDIR /app
 ENV FLASK_APP=api.py
 ENV FLASK_ENV=development
 COPY ./api/requirements.txt .
-COPY ./.env .
 RUN pip install -r requirements.txt
-COPY . .
+COPY ./api .
+COPY ./.env .
 CMD [ "python", "api.py" ]

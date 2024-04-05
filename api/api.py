@@ -5,14 +5,12 @@ import time
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+load_dotenv(find_dotenv())
 db_user = os.getenv('POSTGRES_USER')
 db_pass = os.getenv('POSTGRES_PASSWORD')
-
-
-
+print(db_user)
 app = Flask(__name__)
 
 
@@ -25,7 +23,7 @@ app = Flask(__name__)
     
 @app.route('/')
 def index():
-    return db_user
+    return "Hello " + str(db_user)
 
 @app.route('/api/time')
 def get_current_time():

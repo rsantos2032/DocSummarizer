@@ -4,11 +4,9 @@ services:
   api:
     build: 
       context: .
-      dockerfile: api/Dockerfile
+      dockerfile: ./api/Dockerfile
     ports:
       - "5000:5000"
-    volumes:
-      - ./api:/app
     environment:
       FLASK_ENV: development
     image: docsummarizer-api
