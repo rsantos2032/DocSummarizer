@@ -2,8 +2,10 @@ import sys
 import os
 import time
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from api.parsers.TextParser import TextParser
+from api.summarizers.GPTSummarizer import GPTSummarizer
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -25,9 +27,16 @@ app = Flask(__name__)
 def index():
     return "Hello " + str(db_user)
 
-@app.route('/api/time')
-def get_current_time():
-    return {'time': time.time()}
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return 'No file part', 400
+    file = request.files['file']
+    parser = TextParser()
+    text = parser.parse(file)
+    summarizer = GPTSummarizer()
+    summarized_text = summarizer.summarize(text)
+    return 'File received'
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

@@ -9,11 +9,14 @@ class GPTSummarizer:
         secret_key = os.getenv('OPENAI_SECRET_KEY')
         self.client = OpenAI(api_key=secret_key)
         
+    def get_text_num_words(text):
+        return len(text.split())
+        
     def summarize(self, text, params={}):
         system_msg = 'You are a text summarizer'
         user_msg = 'Summarize the following text: "' + text + '". Return only the summarized text. '
         
-        word_limit = params.get('word_limit', None)
+        word_limit = params.get('word_limit', 1000)
         if word_limit:
             user_msg += 'The summarized text cannot be greater than ' + str(word_limit) + ' words. '
         
