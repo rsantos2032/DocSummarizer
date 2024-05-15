@@ -16,6 +16,7 @@
 __pycache__/
 .ipynb_checkpoints
 /notebook/data
+/uploads/
 kaggle.json
 .env
 .env.local
