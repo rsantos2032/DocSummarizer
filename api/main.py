@@ -5,6 +5,9 @@ import time
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 # from api.parsers.TextParser import TextParser
+# from api.summarizers.DLSummarizer import DLSummarizer as Summarizer
+from io import BytesIO
+
 # from api.summarizers.GPTSummarizer import GPTSummarizer
 from parsers.TextParser import TextParser
 from summarizers.DLSummarizer import DLSummarizer as Summarizer
@@ -47,13 +50,14 @@ def upload_file():
     parser = TextParser()
     
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-        text = parser.parse(file_path)
+        file_contents = file.read()
+        file.seek(0)
+        file_wrapper = BytesIO(file_contents)
+        text= parser.parse(file_wrapper)
         summarizer = Summarizer()
         summarized_text = summarizer.summarize(text)
-    return render_template('index.html', summarized_text=summarized_text)
+        return jsonify({'summarized_text': summarized_text}), 200
+    return 'Invalid file format', 400
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

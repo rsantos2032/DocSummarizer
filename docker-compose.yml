@@ -10,6 +10,9 @@ services:
     environment:
       FLASK_ENV: development
     image: docsummarizer-api
+    volumes:
+      - ./api:/app
+      - ./models:/app
   client:
     build: ./client
     ports:

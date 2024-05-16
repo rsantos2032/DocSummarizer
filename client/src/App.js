@@ -42,12 +42,13 @@ import axios from  'axios';
 const FileUpload = () => {
   const [file, setFile] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [summarizedText, setSummarizedTest] = useState('');
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     const allowedTypes = ['text/plain', 'application/pdf']
     if (selectedFile && !allowedTypes.includes(selectedFile.type)) {
-      setErrorMessage('Please select a PDF file.');
+      setErrorMessage('Please select a PDF or Text file.');
     } else {
       setFile(selectedFile);
       setErrorMessage('');
@@ -63,14 +64,16 @@ const FileUpload = () => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      await axios.post('/upload', formData, {
+      const response = await axios.post('/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+      setSummarizedTest(response.data.summarizedText);
       console.log('File uploaded successfully.');
     } catch (error) {
       console.error('Error uploading file:', error);
+      setErrorMessage('Error uploading file.')
     }
   };
 
@@ -79,6 +82,7 @@ const FileUpload = () => {
       <input type="file" accept=".pdf,.txt" onChange={handleFileChange} />
       <button onClick={handleSubmit}>Submit</button>
       {errorMessage && <div style={{color:'red'}}>{errorMessage}</div>}
+      {summarizedText && <div>{summarizedText}</div>}
     </div>
   );
 };
