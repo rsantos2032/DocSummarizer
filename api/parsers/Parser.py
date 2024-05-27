@@ -1,6 +1,6 @@
 class Parser:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
     
-    def parse(self, file):
+    def parse(self, path: str) -> str:
         return ''

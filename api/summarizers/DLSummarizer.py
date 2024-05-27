@@ -1,25 +1,29 @@
 import pickle
-import numpy as np
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow.keras.models import load_model
 import re
+
 import contractions
-from .attention import AttentionLayer
+import nltk
+import numpy as np
 from nltk.corpus import stopwords
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.preprocessing.text import Tokenizer
+
+from .attention import AttentionLayer
+
 
 class DLSummarizer:
     def __init__(self) -> None:
         self.X_tokenizer = None
         self.y_tokenizer = None
         
-        self.encoder_model = load_model('../../models/encoder_model.h5')
-        self.decoder_model = load_model('../../models/decoder_model.h5', custom_objects={'AttentionLayer': AttentionLayer})
+        self.encoder_model = load_model('./models/encoder_model.h5')
+        self.decoder_model = load_model('./models/decoder_model.h5', custom_objects={'AttentionLayer': AttentionLayer})
         
-        with open('../../models/X_tokenizer.pickle', 'rb') as handle:
+        with open('./models/X_tokenizer.pickle', 'rb') as handle:
             self.X_tokenizer = pickle.load(handle)
             
-        with open('../../models/y_tokenizer.pickle', 'rb') as handle:
+        with open('./models/y_tokenizer.pickle', 'rb') as handle:
             self.y_tokenizer = pickle.load(handle)
             
         self.reverse_target_word_index = self.y_tokenizer.index_word
@@ -74,6 +78,6 @@ class DLSummarizer:
     
     def summarize(self, text):
         cleaned_text = self.clean_text(text)
-        padd_text = self.sequence_pad(self.X_tokenizer, cleaned_text)
-        summarized_text = self.sequence_decoder(padd_text[0].reshape(1, 350))
+        pad_text = self.sequence_pad(self.X_tokenizer, f"sostok {cleaned_text} eostok")
+        summarized_text = self.sequence_decoder(pad_text[0].reshape(1, 350))
         return summarized_text

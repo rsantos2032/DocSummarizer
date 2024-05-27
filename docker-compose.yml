@@ -12,7 +12,6 @@ services:
     image: docsummarizer-api
     volumes:
       - ./api:/app
-      - ./models:/app
   client:
     build: ./client
     ports:
