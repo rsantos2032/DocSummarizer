@@ -1,1 +1,1 @@
-Software project utilizing transformers tuned for law document summarization.
+Software project utilizing generative AI tuned for law document summarization.
