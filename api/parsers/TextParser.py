@@ -1,7 +1,5 @@
 from .Parser import Parser
 
-
-# class TextParser(Parser):
 class TextParser(Parser):
     def parse(self, path: str) -> str:
         text = ''
